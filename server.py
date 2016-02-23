@@ -10,12 +10,41 @@ ALLOWED_EXTENSIONS = set(['txt'])
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-def allowed_file(filename):
+def AllowedFile(filename):
     return True # allow any file type
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-def template(body, path):
+def ListAndLinkDir(rel_path, phys_path):
+    # the links need to be relative to the parent path only
+    html = "".join(["["+l+"]("+os.path.join(os.path.basename(rel_path),l)+")<br>" for l in os.listdir(phys_path)])
+    return html
+
+def LinkDisplayPath(path):
+    # split the path up into linked buttons
+    pieces = path.split('/')
+    print(pieces)
+
+    # generate the links for those buttons
+    dirorder = []
+    for p in pieces:
+        dirorder.append(path)
+        path = os.path.dirname(path)
+    dirorder.reverse()
+
+    # link each part of the path
+    root = '<a href=\"/\">/</a>'
+    lpath = ''
+    for p,d in zip(pieces,dirorder):
+        if p == '': # skip first and last /
+            continue
+        if p != pieces[-1]: # don't put a trailing /
+            p += '/'
+        lpath += '<a href=\"'+d+'\">'+p+'</a>'
+
+    return root+lpath
+    
+def Template(body, path):
     page = """
 <!doctype html>
 <title>Angry Share</title>
@@ -27,17 +56,12 @@ def template(body, path):
 </form>
 """
     page += "\n----\n"
-    page += "## " + path + "\n------\n<p>"
+    page += LinkDisplayPath(path)+ "\n------\n<p>"
     page += body
     page += """</p></xmp>
 <script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
 </html>"""
     return page
-
-def listandlinkdir(rel_path, phys_path):
-    # the links need to be relative to the parent path only
-    html = "".join(["["+l+"]("+os.path.join(os.path.basename(rel_path),l)+")<br>" for l in os.listdir(phys_path)])
-    return html
 
 @app.route('/', defaults={'path': ''}, methods=['GET', 'POST'])
 @app.route("/<path:path>", methods=['GET', 'POST'])
@@ -53,7 +77,7 @@ def index(path):
 
     if request.method == 'POST':
         file = request.files['file']
-        if file and allowed_file(file.filename):
+        if file and AllowedFile(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(upload_path, filename))
             return redirect(os.path.join(url_for('index'),path))
@@ -61,7 +85,8 @@ def index(path):
     # if GET
     if os.path.isdir(upload_path):
         display_path = os.path.join('/',path)
-        return template(listandlinkdir(path, upload_path), display_path)
+        LinkDisplayPath(display_path)
+        return Template(ListAndLinkDir(path, upload_path), display_path)
 
     if os.path.isfile(upload_path):
         dirname = os.path.dirname(upload_path)
