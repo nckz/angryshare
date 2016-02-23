@@ -7,7 +7,7 @@ from werkzeug import secure_filename
 UPLOAD_FOLDER = './tmp/'
 ALLOWED_EXTENSIONS = set(['txt'])
 
-app = Flask(__name__)#, static_url_path='')
+app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def allowed_file(filename):
@@ -18,7 +18,7 @@ def allowed_file(filename):
 def template(body, path):
     page = """
 <!doctype html>
-<title>Upload New File</title>
+<title>Angry Share</title>
 <xmp theme="united" style="display:none;">
 
 # Upload New File
@@ -34,15 +34,10 @@ def template(body, path):
 </html>"""
     return page
 
-#@app.route('/', defaults={'path': '/tmp/'})
-#@app.route('/tmp/<path:path>')
-#def send(path):
-#        print('path ', path)
-#        return send_from_directory(UPLOAD_FOLDER, path)
-#        return 'you want path: %s' % path
-
 def listandlinkdir(rel_path, phys_path):
-    return "".join(["["+l+"]("+os.path.join(rel_path,l)+")<br>" for l in os.listdir(phys_path)])
+    # the links need to be relative to the parent path only
+    html = "".join(["["+l+"]("+os.path.join(os.path.basename(rel_path),l)+")<br>" for l in os.listdir(phys_path)])
+    return html
 
 @app.route('/', defaults={'path': ''}, methods=['GET', 'POST'])
 @app.route("/<path:path>", methods=['GET', 'POST'])
@@ -52,9 +47,9 @@ def index(path):
     # This way the client sees the root as http://<host>/ but the actual
     # uploads directory can be something else.
     upload_path = os.path.join(app.config['UPLOAD_FOLDER'], path)
-    print('path', path)
-    print('upload_path', upload_path)
-    print('url_for_index', os.path.join(url_for('index'),path))
+    #print('path', path)
+    #print('upload_path', upload_path)
+    #print('url_for_index', os.path.join(url_for('index'),path))
 
     if request.method == 'POST':
         file = request.files['file']
@@ -65,7 +60,8 @@ def index(path):
 
     # if GET
     if os.path.isdir(upload_path):
-        return template(listandlinkdir(path, upload_path), upload_path)
+        display_path = os.path.join('/',path)
+        return template(listandlinkdir(path, upload_path), display_path)
 
     if os.path.isfile(upload_path):
         dirname = os.path.dirname(upload_path)
