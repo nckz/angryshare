@@ -17,13 +17,20 @@ def AllowedFile(filename):
 
 def ListAndLinkDir(rel_path, phys_path):
     # the links need to be relative to the parent path only
-    html = "".join(["["+l+"]("+os.path.join(os.path.basename(rel_path),l)+")<br>" for l in os.listdir(phys_path)])
+    html = ''
+    for l in os.listdir(phys_path):
+        # make directories stand out
+        p = l
+        if os.path.isdir(os.path.join(phys_path,l)):
+            p = "**"+l+"**"
+
+        # assemble markdown links
+        html += "["+p+"]("+os.path.join(os.path.basename(rel_path),l)+")<br>" 
     return html
 
 def LinkDisplayPath(path):
     # split the path up into linked buttons
     pieces = path.split('/')
-    print(pieces)
 
     # generate the links for those buttons
     dirorder = []
