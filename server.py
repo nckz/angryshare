@@ -1,5 +1,18 @@
 #!/usr/bin/env python
 
+# Author: Nick Zwart
+# Date: 2016feb21
+
+# TODO
+#   * make commandline interface with options for port, uploads dir, app path...
+#   * add file size and date
+#   * add upload drag'n drop
+#   * add new directory, move, and delete options
+#   * project name: AngryShare, ShareNinja, TheGiver, ShareBot, GiveAndTake, 
+#     EasyShare, RapidShare, FileHub, PowerShare, MaximumShare,
+#     HyperTextTransferProtocolShare (HTTPS), Rat'sNest, FileDump, TheDump
+#     Garbage, DumpHub, myGarbage, iDump
+
 import os
 from flask import Flask, request, redirect, url_for, send_from_directory, abort
 from werkzeug import secure_filename
@@ -63,7 +76,8 @@ def Template(body, path):
 </form>
 """
     page += "\n----\n"
-    page += LinkDisplayPath(path)+ "\n------\n<p>"
+    page += "## " + LinkDisplayPath(path) + "\n"
+    page += "<p>"
     page += body
     page += """</p></xmp>
 <script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
