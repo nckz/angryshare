@@ -23,6 +23,10 @@ ALLOWED_EXTENSIONS = set(['txt'])
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(app.root_path, 'favicon.ico')
+
 def AllowedFile(filename):
     return True # allow any file type
     return '.' in filename and \
