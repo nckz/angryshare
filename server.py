@@ -15,9 +15,13 @@
 #   * checkout dropzone.js and dragula.js
 
 import os
+import jinja2
 from flask import Flask, request, redirect, url_for, send_from_directory, abort
 from flask import render_template
 from werkzeug import secure_filename
+
+jinja_env = jinja2.Environment()
+jinja_env.globals.update(zip=zip)
 
 UPLOAD_FOLDER = './tmp/'
 ALLOWED_EXTENSIONS = set(['txt'])
@@ -34,7 +38,7 @@ def AllowedFile(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-def ListAndLinkDir(rel_path, phys_path):
+def _ListAndLinkDir(rel_path, phys_path):
     # the links need to be relative to the parent path only
     html = ''
     for l in os.listdir(phys_path):
@@ -46,6 +50,27 @@ def ListAndLinkDir(rel_path, phys_path):
         # assemble markdown links
         html += "["+p+"]("+os.path.join(os.path.basename(rel_path),l)+")<br>" # markdown
     return html
+
+def ListAndLinkDir(rel_path, phys_path):
+    # the links need to be relative to the parent path only
+    ls = [] # directory listing
+    links = [] # urls for each file
+    style = [] # how should directory links be styled
+    for l in os.listdir(phys_path):
+        # keep the filename
+        ls.append(l)
+
+        # make directories stand out
+        if os.path.isdir(os.path.join(phys_path,l)):
+            style.append(True)
+        else:
+            style.append(False)
+
+        # assemble markdown links
+        url = os.path.join(os.path.basename(rel_path),l)
+        links.append(url)
+
+    return zip(ls, links, style)
 
 def LinkDisplayPath(path):
     # split the path up into linked buttons
@@ -90,8 +115,8 @@ def index(path):
     if os.path.isdir(upload_path):
         display_path = os.path.join('/',path)
         header = LinkDisplayPath(display_path)
-        body = ListAndLinkDir(path, upload_path)
-        return render_template('directory_index.html', displayPath=header, directoryListing=body)
+        dirlinks = ListAndLinkDir(path, upload_path)
+        return render_template('directory_index.html', displayPath=header, dirlinks=dirlinks)
 
     if os.path.isfile(upload_path):
         dirname = os.path.dirname(upload_path)

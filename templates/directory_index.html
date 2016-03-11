@@ -1,13 +1,26 @@
 <!doctype html>
 <title>Angry Share</title>
 <xmp theme="united" style="display:none;">
+
 <h1>Upload New File</h1>
 <form action="" method=post enctype=multipart/form-data>
 <input type=file name=file> <input type=submit value=Upload>
 </form>
+
 <hr>
+
 <h2>{{ displayPath|safe }}</h2> <!-- html code of the dir path with links -->
-<p>{{ directoryListing|safe }}</p> <!-- html code listing the files in each dir-->
+
+<p><!-- html code listing the files in each dir-->
+    {% for filename,url,style in dirlinks %}
+        {% if style %}
+            <b><a href="{{url}}">{{filename}}</a></b> <br>
+        {% else %}
+            <a href="{{url}}">{{filename}}</a> <br>
+        {% endif %}
+    {% endfor %}
+</p> 
+
 </xmp>
 <script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
 </html>
