@@ -12,9 +12,11 @@
 #     EasyShare, RapidShare, FileHub, PowerShare, MaximumShare,
 #     HyperTextTransferProtocolShare (HTTPS), Rat'sNest, FileDump, TheDump
 #     Garbage, DumpHub, myGarbage, iDump
+#   * checkout dropzone.js and dragula.js
 
 import os
 from flask import Flask, request, redirect, url_for, send_from_directory, abort
+from flask import render_template
 from werkzeug import secure_filename
 
 UPLOAD_FOLDER = './tmp/'
@@ -39,10 +41,10 @@ def ListAndLinkDir(rel_path, phys_path):
         # make directories stand out
         p = l
         if os.path.isdir(os.path.join(phys_path,l)):
-            p = "**"+l+"**"
+            p = "**"+l+"**" # markdown
 
         # assemble markdown links
-        html += "["+p+"]("+os.path.join(os.path.basename(rel_path),l)+")<br>" 
+        html += "["+p+"]("+os.path.join(os.path.basename(rel_path),l)+")<br>" # markdown
     return html
 
 def LinkDisplayPath(path):
@@ -68,26 +70,6 @@ def LinkDisplayPath(path):
 
     return root+lpath
     
-def Template(body, path):
-    page = """
-<!doctype html>
-<title>Angry Share</title>
-<xmp theme="united" style="display:none;">
-
-# Upload New File
-<form action="" method=post enctype=multipart/form-data>
-<input type=file name=file> <input type=submit value=Upload>
-</form>
-"""
-    page += "\n----\n"
-    page += "## " + LinkDisplayPath(path) + "\n"
-    page += "<p>"
-    page += body
-    page += """</p></xmp>
-<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
-</html>"""
-    return page
-
 @app.route('/', defaults={'path': ''}, methods=['GET', 'POST'])
 @app.route("/<path:path>", methods=['GET', 'POST'])
 def index(path):
@@ -96,9 +78,6 @@ def index(path):
     # This way the client sees the root as http://<host>/ but the actual
     # uploads directory can be something else.
     upload_path = os.path.join(app.config['UPLOAD_FOLDER'], path)
-    #print('path', path)
-    #print('upload_path', upload_path)
-    #print('url_for_index', os.path.join(url_for('index'),path))
 
     if request.method == 'POST':
         file = request.files['file']
@@ -110,8 +89,9 @@ def index(path):
     # if GET
     if os.path.isdir(upload_path):
         display_path = os.path.join('/',path)
-        LinkDisplayPath(display_path)
-        return Template(ListAndLinkDir(path, upload_path), display_path)
+        header = LinkDisplayPath(display_path)
+        body = ListAndLinkDir(path, upload_path)
+        return render_template('directory_index.html', displayPath=header, directoryListing=body)
 
     if os.path.isfile(upload_path):
         dirname = os.path.dirname(upload_path)
@@ -122,4 +102,5 @@ def index(path):
     abort(500)
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
+    #app.run(host='tron.local', port=5000, debug=True)
