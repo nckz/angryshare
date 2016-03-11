@@ -9,13 +9,15 @@
 
 <hr>
 
-<h2>{{ displayPath|safe }}</h2> <!-- html code of the dir path with links -->
+<h2><!-- directory path navigation -->
+{% for path,url in pathlist %}<a href="{{url}}">{{path}}</a>{% endfor %}
+</h2> 
 
-<p><!-- html code listing the files in each dir-->
+<p><!-- listing and linking the files in each dir-->
     {% for filename,url,style in dirlinks %}
-        {% if style %}
+        {% if style %} <!-- directories -->
             <b><a href="{{url}}">{{filename}}</a></b> <br>
-        {% else %}
+        {% else %} <!-- files -->
             <a href="{{url}}">{{filename}}</a> <br>
         {% endif %}
     {% endfor %}

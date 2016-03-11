@@ -38,19 +38,6 @@ def AllowedFile(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-def _ListAndLinkDir(rel_path, phys_path):
-    # the links need to be relative to the parent path only
-    html = ''
-    for l in os.listdir(phys_path):
-        # make directories stand out
-        p = l
-        if os.path.isdir(os.path.join(phys_path,l)):
-            p = "**"+l+"**" # markdown
-
-        # assemble markdown links
-        html += "["+p+"]("+os.path.join(os.path.basename(rel_path),l)+")<br>" # markdown
-    return html
-
 def ListAndLinkDir(rel_path, phys_path):
     # the links need to be relative to the parent path only
     ls = [] # directory listing
@@ -84,16 +71,17 @@ def LinkDisplayPath(path):
     dirorder.reverse()
 
     # link each part of the path
-    root = '<a href=\"/\">/</a>'
-    lpath = ''
+    paths = ['/']
+    urls  = ['/']
     for p,d in zip(pieces,dirorder):
         if p == '': # skip first and last /
             continue
         if p != pieces[-1]: # don't put a trailing /
             p += '/'
-        lpath += '<a href=\"'+d+'\">'+p+'</a>'
+        paths.append(p)
+        urls.append(d)
 
-    return root+lpath
+    return zip(paths, urls)
     
 @app.route('/', defaults={'path': ''}, methods=['GET', 'POST'])
 @app.route("/<path:path>", methods=['GET', 'POST'])
@@ -114,9 +102,9 @@ def index(path):
     # if GET
     if os.path.isdir(upload_path):
         display_path = os.path.join('/',path)
-        header = LinkDisplayPath(display_path)
+        path_nav = LinkDisplayPath(display_path)
         dirlinks = ListAndLinkDir(path, upload_path)
-        return render_template('directory_index.html', displayPath=header, dirlinks=dirlinks)
+        return render_template('directory_index.html', pathlist=path_nav, dirlinks=dirlinks)
 
     if os.path.isfile(upload_path):
         dirname = os.path.dirname(upload_path)
