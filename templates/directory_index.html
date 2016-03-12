@@ -11,9 +11,12 @@
 
   <!-- <script src="/js/build/build.js?v=6"></script> -->
   <!-- <script src="https://raw.githubusercontent.com/enyo/dropzone/master/dist/dropzone.js"></script> -->
+
+  <!-- <script src="http://requirejs.org/docs/release/2.1.22/comments/require.js"></script> -->
+
   <script src="./dropzone.js"></script>
   <script>
-    var Dropzone = require("enyo-dropzone");
+    //var Dropzone = require(["dropzone"]);
     Dropzone.autoDiscover = false;
   </script>
 
@@ -113,18 +116,15 @@
 
       <div class="col-lg-7">
         <!-- The fileinput-button span is used to style the file input field as button -->
-        <span class="btn btn-success fileinput-button">
+        <!-- <span class="btn btn-success fileinput-button">
             <i class="glyphicon glyphicon-plus"></i>
-            <span>Add files...</span>
         </span>
         <button type="submit" class="btn btn-primary start">
             <i class="glyphicon glyphicon-upload"></i>
-            <span>Start upload</span>
         </button>
         <button type="reset" class="btn btn-warning cancel">
             <i class="glyphicon glyphicon-ban-circle"></i>
-            <span>Cancel upload</span>
-        </button>
+        </button> -->
       </div>
 
       <div class="col-lg-5">
@@ -188,8 +188,8 @@
         parallelUploads: 20,
         previewTemplate: previewTemplate,
         autoQueue: false, // Make sure the files aren't queued until manually added
-        previewsContainer: "#previews", // Define the container to display the previews
-        clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
+        previewsContainer: "#previews"//, // Define the container to display the previews
+        //clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
       });
 
       myDropzone.on("addedfile", function(file) {
@@ -217,12 +217,12 @@
       // Setup the buttons for all transfers
       // The "add files" button doesn't need to be setup because the config
       // `clickable` has already been specified.
-      document.querySelector("#actions .start").onclick = function() {
+      /*document.querySelector("#actions .start").onclick = function() {
         myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED));
       };
       document.querySelector("#actions .cancel").onclick = function() {
         myDropzone.removeAllFiles(true);
-      };
+      }; */
     </script>
 
   </div>
