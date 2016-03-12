@@ -15,13 +15,9 @@
 #   * checkout dropzone.js and dragula.js
 
 import os
-import jinja2
 from flask import Flask, request, redirect, url_for, send_from_directory, abort
 from flask import render_template
 from werkzeug import secure_filename
-
-jinja_env = jinja2.Environment()
-jinja_env.globals.update(zip=zip)
 
 UPLOAD_FOLDER = './tmp/'
 STATIC_FOLDER = 'static'
