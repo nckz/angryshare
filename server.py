@@ -96,6 +96,7 @@ def index(path):
 
     if request.method == 'POST':
         file = request.files['file']
+        print('files POSTed:', file)
         if file and AllowedFile(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(upload_path, filename))
