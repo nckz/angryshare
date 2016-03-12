@@ -24,6 +24,7 @@ jinja_env = jinja2.Environment()
 jinja_env.globals.update(zip=zip)
 
 UPLOAD_FOLDER = './tmp/'
+STATIC_FOLDER = 'static'
 ALLOWED_EXTENSIONS = set(['txt'])
 
 app = Flask(__name__)
@@ -32,6 +33,11 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(app.root_path, 'favicon.ico')
+
+@app.route('/dropzone.js')
+def dropzone():
+    path = os.path.join(STATIC_FOLDER,'dropzone.js')
+    return send_from_directory(app.root_path, path)
 
 def AllowedFile(filename):
     return True # allow any file type
