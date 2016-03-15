@@ -35,6 +35,11 @@ def dropzone():
     path = os.path.join(STATIC_FOLDER,'dropzone.js')
     return send_from_directory(app.root_path, path)
 
+@app.route('/dropzone.css')
+def dropzonecss():
+    path = os.path.join(STATIC_FOLDER,'dropzone.css')
+    return send_from_directory(app.root_path, path)
+
 def AllowedFile(filename):
     return True # allow any file type
     return '.' in filename and \

@@ -3,30 +3,10 @@
   <meta charset=="utf-8">
   <title>Angry Share</title>
 
-
 </head>
-<body>
+<body> <!-- BODY -->
 
-<div id="selectImage">Select Image</div>
-<div id="fileSubmit">Submit</div>
-
-<div id="droparea">
-    <p>droparea</p>
-    <div id="previewsContainer">
-        <p>previewsContainer</p>
-    </div>
-</div>
-
-
-<xmp theme="united" style="display:none;">
-
-<!-- <h1>Upload New File</h1>
-<form action="" method=post enctype=multipart/form-data>
-<input type=file name=file> <input type=submit value=Upload>
-</form> 
-
-
-<hr> -->
+<xmp theme="united" style="display:none;"> 
 
 <h2><!-- directory path navigation -->
 {% for path,url in pathlist %}<a href="{{url}}">{{path}}</a>{% endfor %}
@@ -44,9 +24,33 @@
 
 </xmp>
 
-<!-- Scripts -->
-<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
+<!-- Drop Zone -->
+<link rel="stylesheet" href="./dropzone.css">
+<style> 
+  html, body { /* Required for the whole body to be droppable. */
+    height: 100%;
+  }
+  #previews {
+    margin: 25px;
+  }
+</style> 
+
+<!-- Preview container for file uploads -->
+<div id="previews" class="dropzone-previews"></div>
+
 <script src="./dropzone.js"></script>
+<script>
+  new Dropzone(document.body, { // Make the whole body a dropzone
+    url: "#", // Set the url to the current path
+    previewsContainer: "#previews", // Define the container to display the previews
+    clickable: false, // don't bring up the file browser if the body is clicked
+    maxFilesize: 100000 // 100GB
+  });
+</script>
+<!-- Drop Zone -->
+
+<!-- Deferred Uploads -->
+<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
 
 </body>
 </html>
