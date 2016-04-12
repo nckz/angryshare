@@ -93,6 +93,8 @@
     {% endfor %}
 </p> 
 
+
+    <!-- upload buttons: add file, start, cancel -->
     <div id="actions" class="row">
 
       <div class="col-lg-7">
@@ -123,8 +125,7 @@
     </div>
 
 
-
-
+    <!-- preview panel -->
     <div class="table table-striped files" id="previews">
 
       <div id="template" class="file-row">
@@ -196,8 +197,10 @@
       });
 
       // Hide the total progress bar when nothing's uploading anymore
+      // Reload the page to reflect upload changes.
       myDropzone.on("queuecomplete", function(progress) {
         document.querySelector("#total-progress").style.opacity = "0";
+        location.reload(true);
       });
 
       // Setup the buttons for all transfers
