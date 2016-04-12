@@ -1,6 +1,7 @@
-<!doctype html>
+<!DOCTYPE html>
 <head>
   <meta charset=="utf-8">
+
   <title>Angry Share</title>
 
   <!-- Latest compiled and minified CSS -->
@@ -9,11 +10,14 @@
   <!-- Optional theme -->
   <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
   <!-- <script src="/js/build/build.js?v=6"></script> -->
   <!-- <script src="https://raw.githubusercontent.com/enyo/dropzone/master/dist/dropzone.js"></script> -->
   <script src="{{ url_for('static', filename='dropzone.js') }}"></script>
+
   <script>
-    var Dropzone = require("enyo-dropzone");
+    //var Dropzone = require("enyo-dropzone");
     Dropzone.autoDiscover = false;
   </script>
 
@@ -157,55 +161,56 @@
     </div>
 
     <script>
-      // get the template html and remove it from the doument
-      var previewnode = document.queryselector("#template");
-      previewnode.id = "";
-      var previewtemplate = previewnode.parentnode.innerhtml;
-      previewnode.parentnode.removechild(previewnode);
+      // Get the template HTML and remove it from the doument
+      var previewNode = document.querySelector("#template");
+      previewNode.id = "";
+      var previewTemplate = previewNode.parentNode.innerHTML;
+      previewNode.parentNode.removeChild(previewNode);
 
-      var mydropzone = new dropzone(document.body, { // make the whole body a dropzone
-        url: "#", // set the url
-        thumbnailwidth: 80,
-        thumbnailheight: 80,
-        paralleluploads: 20,
-        previewtemplate: previewtemplate,
-        autoqueue: false, // make sure the files aren't queued until manually added
-        previewscontainer: "#previews", // define the container to display the previews
-        clickable: ".fileinput-button" // define the element that should be used as click trigger to select files.
+      var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
+        url: "#", // Set the url
+        thumbnailWidth: 80,
+        thumbnailHeight: 80,
+        parallelUploads: 20,
+        previewTemplate: previewTemplate,
+        autoQueue: false, // Make sure the files aren't queued until manually added
+        previewsContainer: "#previews", // Define the container to display the previews
+        clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
       });
 
-      mydropzone.on("addedfile", function(file) {
-        // hookup the start button
-        file.previewelement.queryselector(".start").onclick = function() { mydropzone.enqueuefile(file); };
+      myDropzone.on("addedfile", function(file) {
+        // Hookup the start button
+        file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file); };
       });
 
-      // update the total progress bar
-      mydropzone.on("totaluploadprogress", function(progress) {
-        document.queryselector("#total-progress .progress-bar").style.width = progress + "%";
+      // Update the total progress bar
+      myDropzone.on("totaluploadprogress", function(progress) {
+        document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
       });
 
-      mydropzone.on("sending", function(file) {
-        // show the total progress bar when upload starts
-        document.queryselector("#total-progress").style.opacity = "1";
-        // and disable the start button
-        file.previewelement.queryselector(".start").setattribute("disabled", "disabled");
+      myDropzone.on("sending", function(file) {
+        // Show the total progress bar when upload starts
+        document.querySelector("#total-progress").style.opacity = "1";
+        // And disable the start button
+        file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
       });
 
-      // hide the total progress bar when nothing's uploading anymore
-      mydropzone.on("queuecomplete", function(progress) {
-        document.queryselector("#total-progress").style.opacity = "0";
+      // Hide the total progress bar when nothing's uploading anymore
+      myDropzone.on("queuecomplete", function(progress) {
+        document.querySelector("#total-progress").style.opacity = "0";
       });
 
-      // setup the buttons for all transfers
-      // the "add files" button doesn't need to be setup because the config
+      // Setup the buttons for all transfers
+      // The "add files" button doesn't need to be setup because the config
       // `clickable` has already been specified.
-      document.queryselector("#actions .start").onclick = function() {
-        mydropzone.enqueuefiles(mydropzone.getfileswithstatus(dropzone.added));
+      document.querySelector("#actions .start").onclick = function() {
+        myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED));
       };
-      document.queryselector("#actions .cancel").onclick = function() {
-        mydropzone.removeallfiles(true);
+      document.querySelector("#actions .cancel").onclick = function() {
+        myDropzone.removeAllFiles(true);
       };
     </script>
+
 
 </div>
 </body>
