@@ -20,25 +20,18 @@ from flask import render_template
 from werkzeug import secure_filename
 
 UPLOAD_FOLDER = './tmp/'
-STATIC_FOLDER = 'static'
 ALLOWED_EXTENSIONS = set(['txt'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/favicon.ico')
-def favicon():
-    return send_from_directory(app.root_path, 'favicon.ico')
+def faviconico():
+    return url_for('static', filename='favicon.ico')
 
-@app.route('/dropzone.js')
-def dropzone():
-    path = os.path.join(STATIC_FOLDER,'dropzone.js')
-    return send_from_directory(app.root_path, path)
-
-@app.route('/dropzone.css')
-def dropzonecss():
-    path = os.path.join(STATIC_FOLDER,'dropzone.css')
-    return send_from_directory(app.root_path, path)
+@app.route('/favicon.png')
+def faviconpng():
+    return url_for('static', filename='favicon.png')
 
 def AllowedFile(filename):
     return True # allow any file type

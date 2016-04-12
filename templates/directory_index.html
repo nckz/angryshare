@@ -3,10 +3,77 @@
   <meta charset=="utf-8">
   <title>Angry Share</title>
 
-</head>
-<body> <!-- BODY -->
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
-<xmp theme="united" style="display:none;"> 
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+  <!-- <script src="/js/build/build.js?v=6"></script> -->
+  <!-- <script src="https://raw.githubusercontent.com/enyo/dropzone/master/dist/dropzone.js"></script> -->
+  <script src="{{ url_for('static', filename='dropzone.js') }}"></script>
+  <script>
+    var Dropzone = require("enyo-dropzone");
+    Dropzone.autoDiscover = false;
+  </script>
+
+  <style>
+    html, body {
+      height: 100%;
+    }
+    #actions {
+      margin: 2em 0;
+    }
+
+    /* Mimic table appearance */
+    div.table {
+      display: table;
+    }
+    div.table .file-row {
+      display: table-row;
+    }
+    div.table .file-row > div {
+      display: table-cell;
+      vertical-align: top;
+      border-top: 1px solid #ddd;
+      padding: 8px;
+    }
+    div.table .file-row:nth-child(odd) {
+      background: #f9f9f9;
+    }
+
+    /* The total progress gets shown by event listeners */
+    #total-progress {
+      opacity: 0;
+      transition: opacity 0.3s linear;
+    }
+
+    /* Hide the progress bar when finished */
+    #previews .file-row.dz-success .progress {
+      opacity: 0;
+      transition: opacity 0.3s linear;
+    }
+
+    /* Hide the delete button initially */
+    #previews .file-row .delete {
+      display: none;
+    }
+
+    /* Hide the start and cancel buttons and show the delete button */
+
+    #previews .file-row.dz-success .start,
+    #previews .file-row.dz-success .cancel {
+      display: none;
+    }
+    #previews .file-row.dz-success .delete {
+      display: block;
+    }
+
+  </style>
+</head>
+
+<body> <!-- BODY -->
+<div class="container" id="container">
 
 <h2><!-- directory path navigation -->
 {% for path,url in pathlist %}<a href="{{url}}">{{path}}</a>{% endfor %}
@@ -22,35 +89,124 @@
     {% endfor %}
 </p> 
 
-</xmp>
+    <div id="actions" class="row">
 
-<!-- Drop Zone -->
-<link rel="stylesheet" href="./dropzone.css">
-<style> 
-  html, body { /* Required for the whole body to be droppable. */
-    height: 100%;
-  }
-  #previews {
-    margin: 25px;
-  }
-</style> 
+      <div class="col-lg-7">
+        <!-- The fileinput-button span is used to style the file input field as button -->
+        <span class="btn btn-success fileinput-button">
+            <i class="glyphicon glyphicon-plus"></i>
+            <span>Add files...</span>
+        </span>
+        <button type="submit" class="btn btn-primary start">
+            <i class="glyphicon glyphicon-upload"></i>
+            <span>Start upload</span>
+        </button>
+        <button type="reset" class="btn btn-warning cancel">
+            <i class="glyphicon glyphicon-ban-circle"></i>
+            <span>Cancel upload</span>
+        </button>
+      </div>
 
-<!-- Preview container for file uploads -->
-<div id="previews" class="dropzone-previews"></div>
+      <div class="col-lg-5">
+        <!-- The global file processing state -->
+        <span class="fileupload-process">
+          <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+          </div>
+        </span>
+      </div>
 
-<script src="./dropzone.js"></script>
-<script>
-  new Dropzone(document.body, { // Make the whole body a dropzone
-    url: "#", // Set the url to the current path
-    previewsContainer: "#previews", // Define the container to display the previews
-    clickable: false, // don't bring up the file browser if the body is clicked
-    maxFilesize: 100000 // 100GB
-  });
-</script>
-<!-- Drop Zone -->
+    </div>
 
-<!-- Deferred Uploads -->
-<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
 
+
+
+    <div class="table table-striped files" id="previews">
+
+      <div id="template" class="file-row">
+        <!-- This is used as the file preview template -->
+        <div>
+            <span class="preview"><img data-dz-thumbnail /></span>
+        </div>
+        <div>
+            <p class="name" data-dz-name></p>
+            <strong class="error text-danger" data-dz-errormessage></strong>
+        </div>
+        <div>
+            <p class="size" data-dz-size></p>
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+            </div>
+        </div>
+        <div>
+          <button class="btn btn-primary start">
+              <i class="glyphicon glyphicon-upload"></i>
+              <span>Start</span>
+          </button>
+          <button data-dz-remove class="btn btn-warning cancel">
+              <i class="glyphicon glyphicon-ban-circle"></i>
+              <span>Cancel</span>
+          </button>
+          <button data-dz-remove class="btn btn-danger delete">
+            <i class="glyphicon glyphicon-trash"></i>
+            <span>Delete</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <script>
+      // get the template html and remove it from the doument
+      var previewnode = document.queryselector("#template");
+      previewnode.id = "";
+      var previewtemplate = previewnode.parentnode.innerhtml;
+      previewnode.parentnode.removechild(previewnode);
+
+      var mydropzone = new dropzone(document.body, { // make the whole body a dropzone
+        url: "#", // set the url
+        thumbnailwidth: 80,
+        thumbnailheight: 80,
+        paralleluploads: 20,
+        previewtemplate: previewtemplate,
+        autoqueue: false, // make sure the files aren't queued until manually added
+        previewscontainer: "#previews", // define the container to display the previews
+        clickable: ".fileinput-button" // define the element that should be used as click trigger to select files.
+      });
+
+      mydropzone.on("addedfile", function(file) {
+        // hookup the start button
+        file.previewelement.queryselector(".start").onclick = function() { mydropzone.enqueuefile(file); };
+      });
+
+      // update the total progress bar
+      mydropzone.on("totaluploadprogress", function(progress) {
+        document.queryselector("#total-progress .progress-bar").style.width = progress + "%";
+      });
+
+      mydropzone.on("sending", function(file) {
+        // show the total progress bar when upload starts
+        document.queryselector("#total-progress").style.opacity = "1";
+        // and disable the start button
+        file.previewelement.queryselector(".start").setattribute("disabled", "disabled");
+      });
+
+      // hide the total progress bar when nothing's uploading anymore
+      mydropzone.on("queuecomplete", function(progress) {
+        document.queryselector("#total-progress").style.opacity = "0";
+      });
+
+      // setup the buttons for all transfers
+      // the "add files" button doesn't need to be setup because the config
+      // `clickable` has already been specified.
+      document.queryselector("#actions .start").onclick = function() {
+        mydropzone.enqueuefiles(mydropzone.getfileswithstatus(dropzone.added));
+      };
+      document.queryselector("#actions .cancel").onclick = function() {
+        mydropzone.removeallfiles(true);
+      };
+    </script>
+
+</div>
 </body>
 </html>
