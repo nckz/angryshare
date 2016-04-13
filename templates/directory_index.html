@@ -9,7 +9,7 @@
   <!-- <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}"> -->
 
   <!-- Optional theme -->
-  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+  <!-- <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css"> -->
   <!-- <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-theme.css') }}"> -->
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
@@ -29,12 +29,20 @@
       color: #ff8000;
     }
 
+    #pathurl {
+        color: #ff4000; 
+    }
+
+    #pathurl:hover {
+        color: #ff8000;
+    }
+
     a {
-      color: #ff4000;
+      color: #333333;
     }
 
     a:hover {
-      color: #ff8000;
+      color: #ff4000;
     }
 
     #as-nav {
@@ -101,7 +109,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#" id="as-nav">Angry Share</a>
+      <a class="navbar-brand" href="#" id="as-nav" style="text-shadow: 1px 1px #000000;">Angry Share</a>
     </div>
 
     <div class="collapse navbar-collapse pull-right" id="actions">
@@ -126,7 +134,7 @@
 
 
 <h2><!-- directory path navigation -->
-{% for path,url in pathlist %}<a href="{{url}}">{{path}}</a>{% endfor %}
+{% for path,url in pathlist %}<a id="pathurl" href="{{url}}">{{path}}</a>{% endfor %}
 </h2> 
 
 <p><!-- listing and linking the files in each dir-->
