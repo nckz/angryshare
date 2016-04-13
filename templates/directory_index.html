@@ -4,6 +4,9 @@
 
   <title>Angry Share</title>
 
+  <!-- Custom Fonts -->
+  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
   <!-- <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}"> -->
@@ -137,15 +140,17 @@
 {% for path,url in pathlist %}<a id="pathurl" href="{{url}}">{{path}}</a>{% endfor %}
 </h2> 
 
-<p><!-- listing and linking the files in each dir-->
+<div class="list-group">
+<!-- listing and linking the files in each dir-->
     {% for filename,url,style in dirlinks %}
         {% if style %} <!-- directories -->
-            <b><a href="{{url}}">{{filename}}</a></b> <br>
+            <a class="list-group-item" href="{{url}}"><i class="fa fa-angle-double-right"></i>&nbsp; {{filename}}</a>
         {% else %} <!-- files -->
-            <a href="{{url}}">{{filename}}</a> <br>
+            <a class="list-group-item" href="{{url}}"><i class="fa fa-file-o"></i>&nbsp; {{filename}}</a>
         {% endif %}
     {% endfor %}
-</p> 
+</div>
+
 
     <!-- upload total progress -->
     <div class="row">
