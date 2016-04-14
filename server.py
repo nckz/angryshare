@@ -28,11 +28,11 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route('/favicon.ico')
 def faviconico():
-    return url_for('static', filename='favicon.ico')
+    return send_from_directory('static', 'favicon.ico')
 
 @app.route('/favicon.png')
 def faviconpng():
-    return url_for('static', filename='favicon.png')
+    return send_from_directory('static', 'favicon.png')
 
 def AllowedFile(filename):
     return True # allow any file type
