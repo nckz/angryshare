@@ -15,6 +15,7 @@
 #   * checkout dropzone.js and dragula.js
 
 import os
+import time
 from flask import Flask, request, redirect, url_for, send_from_directory, abort
 from flask import render_template
 from werkzeug import secure_filename
@@ -43,12 +44,20 @@ def ListAndLinkDir(rel_path, phys_path):
     ls = [] # directory listing
     links = [] # urls for each file
     style = [] # how should directory links be styled
+    upload_date = [] # date the file was created on the server (string)
     for l in os.listdir(phys_path):
+
+        # full server-side file-system path
+        file_path = os.path.join(phys_path,l)
+
+        # creation date
+        upload_date.append(time.ctime(os.path.getctime(file_path)))
+
         # keep the filename
         ls.append(l)
 
         # make directories stand out
-        if os.path.isdir(os.path.join(phys_path,l)):
+        if os.path.isdir(file_path):
             style.append(True)
         else:
             style.append(False)
@@ -57,7 +66,7 @@ def ListAndLinkDir(rel_path, phys_path):
         url = os.path.join(os.path.basename(rel_path),l)
         links.append(url)
 
-    return zip(ls, links, style)
+    return zip(ls, links, style, upload_date)
 
 def LinkDisplayPath(path):
     # split the path up into linked buttons
@@ -98,13 +107,15 @@ def index(path):
         if file and AllowedFile(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(upload_path, filename))
+
+            # if its a post from js, then the js will handle this refresh
             return redirect(os.path.join(url_for('index'),path))
 
     # if GET
     if os.path.isdir(upload_path):
         display_path = os.path.join('/',path)
-        path_nav = LinkDisplayPath(display_path)
-        dirlinks = ListAndLinkDir(path, upload_path)
+        path_nav = LinkDisplayPath(display_path) # path navigation
+        dirlinks = ListAndLinkDir(path, upload_path) # file links
         return render_template('directory_index.html', pathlist=path_nav, dirlinks=dirlinks)
 
     if os.path.isfile(upload_path):

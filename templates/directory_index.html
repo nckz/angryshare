@@ -135,6 +135,55 @@
 
 <div class="container" id="container">
 
+<style>
+#demo {
+    -webkit-transition: width 2s ease;
+    -moz-transition: width 2s ease;
+    -o-transition: width 2s ease;
+    transition: width 2s ease;
+    
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    background: yellow;
+    vertical-align: middle;
+    line-height: 30px;
+    height: 30px;
+
+    width: 0px;
+}
+#demo.in {
+    width: 220px;
+}
+</style>
+
+<button type="button" class="btn btn-primary btn-sm" 
+        data-toggle="toggle" data-target="#demo">
+    <i class="glyphicon glyphicon-plus"></i>
+</button>
+
+<div id="demo" class="">
+    <button class="btn btn-default btn-xs" type="button">
+        <span class="glyphicon glyphicon-star"></span> Star
+    </button>
+    <button class="btn btn-default btn-xs" type="button">
+        <span class="glyphicon glyphicon-star"></span> Star
+    </button>
+    <button class="btn btn-default btn-xs" type="button">
+        <span class="glyphicon glyphicon-star"></span> Star
+    </button>
+    <button class="btn btn-default btn-xs" type="button">
+        <span class="glyphicon glyphicon-star"></span> Star
+    </button>
+</div>
+
+<script>
+$("[data-toggle='toggle']").click(function() {
+    var selector = $(this).data("target");
+    $(selector).toggleClass('in');
+});
+</script>
+
 
 <h2><!-- directory path navigation -->
 {% for path,url in pathlist %}<a id="pathurl" href="{{url}}">{{path}}</a>{% endfor %}
@@ -142,11 +191,11 @@
 
 <div class="list-group">
 <!-- listing and linking the files in each dir-->
-    {% for filename,url,style in dirlinks %}
+    {% for filename,url,style,date in dirlinks %}
         {% if style %} <!-- directories -->
-            <a class="list-group-item" href="{{url}}"><i class="fa fa-angle-double-right"></i>&nbsp; {{filename}}</a>
+            <a class="list-group-item" href="{{url}}"><i class="fa fa-angle-double-right"></i>&nbsp; {{filename}} <span class="text-right" style="float: right;">{{date}}</span></a>
         {% else %} <!-- files -->
-            <a class="list-group-item" href="{{url}}"><i class="fa fa-file-o"></i>&nbsp; {{filename}}</a>
+            <a class="list-group-item" href="{{url}}"><i class="fa fa-file-o"></i>&nbsp; {{filename}} <span class="text-right" style="float: right;">{{date}}</span></a>
         {% endif %}
     {% endfor %}
 </div>
