@@ -112,7 +112,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#" id="as-nav" style="text-shadow: 1px 1px #000000;">Angry Share</a>
+      <a class="navbar-brand" href="#" id="as-nav" style="text-shadow: 1px 1px #000000;"><img src="/favicon.png" style="width: 27px;" /> &nbsp; Angry Share</a>
     </div>
 
     <div class="collapse navbar-collapse pull-right" id="actions">
@@ -193,9 +193,13 @@ $("[data-toggle='toggle']").click(function() {
 <!-- listing and linking the files in each dir-->
     {% for filename,url,style,date in dirlinks %}
         {% if style %} <!-- directories -->
-            <a class="list-group-item" href="{{url}}"><i class="fa fa-angle-double-right"></i>&nbsp; {{filename}} <span class="text-right" style="float: right;">{{date}}</span></a>
+            <a class="list-group-item" href="{{url}}"><i class="fa fa-angle-double-right"></i>&nbsp; {{filename}}
+                <span class="text-right" style="float: right;">{{date}}</span>
+            </a>
         {% else %} <!-- files -->
-            <a class="list-group-item" href="{{url}}"><i class="fa fa-file-o"></i>&nbsp; {{filename}} <span class="text-right" style="float: right;">{{date}}</span></a>
+            <a class="list-group-item" href="{{url}}"><i class="fa fa-file-o"></i>&nbsp; {{filename}}
+                <span class="text-right" style="float: right;">{{date}}</span>
+            </a>
         {% endif %}
     {% endfor %}
 </div>
