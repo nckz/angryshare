@@ -162,16 +162,43 @@
     <i class="glyphicon glyphicon-plus"></i>
 </button>
 
+<div id="demo2" class="">
+    <button class="btn btn-default btn-xs" type="button">
+        <span class="glyphicon glyphicon-star"></span> Star
+    </button>
+    <button class="btn btn-default btn-xs" type="button">
+        <span class="glyphicon glyphicon-star"></span> Star
+    </button>
+    <button class="btn btn-default btn-xs" type="button">
+        <span class="glyphicon glyphicon-star"></span> Star
+    </button>
+    <button class="btn btn-default btn-xs" type="button">
+        <span class="glyphicon glyphicon-star"></span> Star
+    </button>
+</div>
+
+
+<h2><!-- directory path navigation -->
+{% for path,url in pathlist %}<a id="pathurl" href="{{url}}">{{path}}</a>{% endfor %}
+</h2> 
+
+<table class="table table-hover">
+<!-- listing and linking the files in each dir-->
+    {% for filename,url,style,date in dirlinks %}
+    <tr>
+        {% if style %} <!-- directories -->
+            <td><i class="fa fa-angle-double-right"></i>&nbsp;<a class="list-group-item-dodo" href="{{url}}">{{filename}} </a></td>
+            <td><span class="text-right" style="float: right;">{{date}}</span></td>
+        {% else %} <!-- files -->
+            <td><i class="fa fa-file-o"></i>&nbsp;<a class="list-group-item-dodo" href="{{url}}">{{filename}}</a></td>
+            <td><span class="text-right" style="float: right;">{{date}}</span></td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+
+
 <div id="demo" class="">
-    <button class="btn btn-default btn-xs" type="button">
-        <span class="glyphicon glyphicon-star"></span> Star
-    </button>
-    <button class="btn btn-default btn-xs" type="button">
-        <span class="glyphicon glyphicon-star"></span> Star
-    </button>
-    <button class="btn btn-default btn-xs" type="button">
-        <span class="glyphicon glyphicon-star"></span> Star
-    </button>
     <button class="btn btn-default btn-xs" type="button">
         <span class="glyphicon glyphicon-star"></span> Star
     </button>
@@ -185,24 +212,6 @@ $("[data-toggle='toggle']").click(function() {
 </script>
 
 
-<h2><!-- directory path navigation -->
-{% for path,url in pathlist %}<a id="pathurl" href="{{url}}">{{path}}</a>{% endfor %}
-</h2> 
-
-<div class="list-group">
-<!-- listing and linking the files in each dir-->
-    {% for filename,url,style,date in dirlinks %}
-        {% if style %} <!-- directories -->
-            <a class="list-group-item" href="{{url}}"><i class="fa fa-angle-double-right"></i>&nbsp; {{filename}}
-                <span class="text-right" style="float: right;">{{date}}</span>
-            </a>
-        {% else %} <!-- files -->
-            <a class="list-group-item" href="{{url}}"><i class="fa fa-file-o"></i>&nbsp; {{filename}}
-                <span class="text-right" style="float: right;">{{date}}</span>
-            </a>
-        {% endif %}
-    {% endfor %}
-</div>
 
 
     <!-- upload total progress -->
