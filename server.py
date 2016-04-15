@@ -16,10 +16,12 @@
 
 import os
 import time
+import socket
 from flask import Flask, request, redirect, url_for, send_from_directory, abort
 from flask import render_template
 from werkzeug import secure_filename
 
+HOSTNAME = socket.gethostname()
 UPLOAD_FOLDER = './tmp/'
 ALLOWED_EXTENSIONS = set(['txt'])
 
@@ -116,7 +118,7 @@ def index(path):
         display_path = os.path.join('/',path)
         path_nav = LinkDisplayPath(display_path) # path navigation
         dirlinks = ListAndLinkDir(path, upload_path) # file links
-        return render_template('directory_index.html', pathlist=path_nav, dirlinks=dirlinks)
+        return render_template('directory_index.html', pathlist=path_nav, dirlinks=dirlinks, hostname=HOSTNAME)
 
     if os.path.isfile(upload_path):
         dirname = os.path.dirname(upload_path)
