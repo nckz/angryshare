@@ -113,13 +113,13 @@
         <span class="icon-bar"></span>
       </button>
 
-
+      <!-- Brand -->
       <span>
         <img src="{{url_for('static',filename='fav-96-wshw.png')}}"
             style="width: 50px;" />
-
-        <span style="display: inline-block; vertical-align: middle; float: none;"><span style="text-shadow: 1px 1px #000000;"><b>Angry Share</b></span><br><small>&nbsp; {{hostname}}</small></span>
-
+        <span style="display: inline-block; vertical-align: middle; float:
+            none;"><span style="text-shadow: 1px 1px #000000;"><b>Angry
+            Share</b></span><br><small>&nbsp; @{{hostname}}</small></span>
       </span>
 
     </div>
@@ -141,58 +141,16 @@
   </div><!-- /.container-fluid -->
 </nav>
 
-
+<!-- most of the page content -->
 <div class="container" id="container">
 
-<style>
-#demo {
-    -webkit-transition: width 2s ease;
-    -moz-transition: width 2s ease;
-    -o-transition: width 2s ease;
-    transition: width 2s ease;
-    
-    display: inline-block;
-    overflow: hidden;
-    white-space: nowrap;
-    background: yellow;
-    vertical-align: middle;
-    line-height: 30px;
-    height: 30px;
-
-    width: 0px;
-}
-#demo.in {
-    width: 220px;
-}
-</style>
-
-<button type="button" class="btn btn-primary btn-sm" 
-        data-toggle="toggle" data-target="#demo">
-    <i class="glyphicon glyphicon-plus"></i>
-</button>
-
-<div id="demo2" class="">
-    <button class="btn btn-default btn-xs" type="button">
-        <span class="glyphicon glyphicon-star"></span> Star
-    </button>
-    <button class="btn btn-default btn-xs" type="button">
-        <span class="glyphicon glyphicon-star"></span> Star
-    </button>
-    <button class="btn btn-default btn-xs" type="button">
-        <span class="glyphicon glyphicon-star"></span> Star
-    </button>
-    <button class="btn btn-default btn-xs" type="button">
-        <span class="glyphicon glyphicon-star"></span> Star
-    </button>
-</div>
-
-
-<h2><!-- directory path navigation -->
+<!-- directory path navigation -->
+<h2>
 {% for path,url in pathlist %}<a id="pathurl" href="{{url}}">{{path}}</a>{% endfor %}
 </h2> 
 
-<table class="table table-hover">
 <!-- listing and linking the files in each dir-->
+<table class="table table-hover">
     {% for filename,url,style,date in dirlinks %}
     <tr>
         {% if style %} <!-- directories -->
@@ -205,20 +163,6 @@
     </tr>
     {% endfor %}
 </table>
-
-
-<div id="demo" class="">
-    <button class="btn btn-default btn-xs" type="button">
-        <span class="glyphicon glyphicon-star"></span> Star
-    </button>
-</div>
-
-<script>
-$("[data-toggle='toggle']").click(function() {
-    var selector = $(this).data("target");
-    $(selector).toggleClass('in');
-});
-</script>
 
 
 
