@@ -109,12 +109,6 @@
   <div class="container-fluid" id="as-nav">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#actions" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
 
       <!-- Brand -->
       <span>
@@ -173,8 +167,8 @@
             </td>
 
             <td><!-- tools -->
-                <button type="button" id="{{id}}" class="btn btn-danger btn-xs
-                    file-options">Delete</button>
+                <button type="submit" value="{{id}}" id="{{id}}" class="btn
+                    btn-danger btn-xs file-options">Move to Trash</button>
             </td>
 
         {% else %} <!-- files -->
@@ -190,7 +184,7 @@
 
             <td><!-- tools -->
                 <button type="button" id="{{id}}" class="btn btn-danger btn-xs
-                    file-options">Delete</button>
+                    file-options">Move to Trash</button>
             </td>
 
         {% endif %}
@@ -239,8 +233,10 @@
         </div>
         <div>
             <p class="size" data-dz-size></p>
-            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-              <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+            <div class="progress progress-striped active" role="progressbar"
+                aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="progress-bar progress-bar-success" style="width:0%;"
+                data-dz-uploadprogress></div>
             </div>
         </div>
         <div>

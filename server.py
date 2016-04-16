@@ -108,6 +108,7 @@ def index(path):
     upload_path = os.path.join(app.config['UPLOAD_FOLDER'], path)
 
     if request.method == 'POST':
+        print(request)
         file = request.files['file']
         print('files POSTed:', file)
         if file and AllowedFile(file.filename):
