@@ -47,6 +47,7 @@ def ListAndLinkDir(rel_path, phys_path):
     links = [] # urls for each file
     style = [] # how should directory links be styled
     upload_date = [] # date the file was created on the server (string)
+    ids = [] # valid and unique html id tags
     for l in os.listdir(phys_path):
 
         # full server-side file-system path
@@ -58,6 +59,9 @@ def ListAndLinkDir(rel_path, phys_path):
         # keep the filename
         ls.append(l)
 
+        # id tags
+        ids.append(l.replace('.','-'))
+
         # make directories stand out
         if os.path.isdir(file_path):
             style.append(True)
@@ -68,7 +72,9 @@ def ListAndLinkDir(rel_path, phys_path):
         url = os.path.join(os.path.basename(rel_path),l)
         links.append(url)
 
-    return zip(ls, links, style, upload_date)
+    print(ids)
+
+    return zip(ls, links, style, upload_date, ids)
 
 def LinkDisplayPath(path):
     # split the path up into linked buttons
