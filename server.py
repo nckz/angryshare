@@ -72,8 +72,6 @@ def ListAndLinkDir(rel_path, phys_path):
         url = os.path.join(os.path.basename(rel_path),l)
         links.append(url)
 
-    print(ids)
-
     return zip(ls, links, style, upload_date, ids)
 
 def LinkDisplayPath(path):

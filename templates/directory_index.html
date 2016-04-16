@@ -91,14 +91,13 @@
       display: none;
     }
 
-    /* Hide the start and cancel buttons and show the delete button */
-
+    /* Hide the start and cancel buttons and hide the delete button */
     #previews .file-row.dz-success .start,
     #previews .file-row.dz-success .cancel {
       display: none;
     }
     #previews .file-row.dz-success .delete {
-      display: block;
+      display: none;
     }
 
   </style>
@@ -147,6 +146,11 @@
 
 <!-- most of the page content -->
 <div class="container" id="container">
+
+<!-- Drag'n drop indication -->
+<div class="text-center" style="margin: 20px 0 0 0;">
+    Add files by dropping them here.
+</div>
 
 <!-- directory path navigation -->
 <h2>
@@ -209,8 +213,12 @@
       <div class="col-lg-5">
         <!-- The global file processing state -->
         <span class="fileupload-process">
-          <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-            <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+          <div id="total-progress" class="progress progress-striped active"
+            role="progressbar" aria-valuemin="0" aria-valuemax="100"
+            aria-valuenow="0">
+
+            <div class="progress-bar progress-bar-success" style="width:0%;"
+                data-dz-uploadprogress></div>
           </div>
         </span>
       </div>
