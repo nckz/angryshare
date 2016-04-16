@@ -97,10 +97,35 @@ def LinkDisplayPath(path):
         urls.append(d)
 
     return zip(paths, urls)
+
+def GetHumanReadable_bytes(size, precision=0):
+    # change size in bytes (int) to a string with nice display units
+    suffixes = ['B', 'K', 'M', 'G', 'T']
+    suffixIndex = 0
+    while int(size) > 1024:
+        suffixIndex += 1
+        size = size / 1024.0
+    return "%.*f%s" % (precision, size, suffixes[suffixIndex])
+
+def df():
+    f = os.statvfs('/')
+    free_space = f.f_bavail*f.f_frsize
+    total_space = f.f_blocks*f.f_frsize
+    used_space = (1 - free_space/total_space) * total_space
+    percentage_full = (1 - free_space/total_space) * 100
+
+    fs = GetHumanReadable_bytes(free_space)
+    ts = GetHumanReadable_bytes(total_space)
+    us = GetHumanReadable_bytes(used_space)
+    pf = "%.*f%%" % (0, percentage_full)
+
+    return (fs, us, ts, pf)
     
 @app.route('/', defaults={'path': ''}, methods=['GET', 'POST'])
 @app.route("/<path:path>", methods=['GET', 'POST'])
 def index(path):
+
+    print(df())
 
     # Convert requested path to the path relative to the downloads directory.
     # This way the client sees the root as http://<host>/ but the actual
@@ -123,7 +148,7 @@ def index(path):
         display_path = os.path.join('/',path)
         path_nav = LinkDisplayPath(display_path) # path navigation
         dirlinks = ListAndLinkDir(path, upload_path) # file links
-        return render_template('directory_index.html', pathlist=path_nav, dirlinks=dirlinks, hostname=HOSTNAME)
+        return render_template('directory_index.html', pathlist=path_nav, dirlinks=dirlinks, hostname=HOSTNAME, df=df())
 
     if os.path.isfile(upload_path):
         dirname = os.path.dirname(upload_path)
