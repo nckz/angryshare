@@ -122,16 +122,20 @@
     </div>
 
     <div class="collapse navbar-collapse pull-right" id="actions">
-        <button type="button" class="btn btn-default navbar-btn fileinput-button">
+        <button type="button" class="btn btn-default navbar-btn
+            fileinput-button" data-toggle="tooltip" data-placement="bottom"
+            title="Add files...">
             <i class="glyphicon glyphicon-plus"></i>
-            <span>Add files...</span></button>
-        <button type="submit" class="btn btn-default start navbar-btn">
-            <i class="glyphicon glyphicon-upload"></i>
-            <span>Start upload</span>
         </button>
-        <button type="reset" class="btn btn-default cancel navbar-btn">
+        <button type="submit" class="btn btn-default start navbar-btn"
+            data-toggle="tooltip" data-placement="bottom"
+            title="Start upload">
+            <i class="glyphicon glyphicon-upload"></i>
+        </button>
+        <button type="reset" class="btn btn-default cancel navbar-btn"
+            data-toggle="tooltip" data-placement="bottom"
+            title="Cancel upload">
             <i class="glyphicon glyphicon-ban-circle"></i>
-            <span>Cancel upload</span>
         </button>
 
     </div><!-- /.navbar-collapse -->
