@@ -109,16 +109,15 @@
   <div class="container-fluid" id="as-nav">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-
       <!-- Brand -->
       <span>
         <img src="{{url_for('static',filename='fav-96-wshw.png')}}"
             style="width: 50px;" />
         <span style="display: inline-block; vertical-align: middle; float:
             none;"><span style="text-shadow: 1px 1px #000000;"><b>Angry
-            Share</b></span><br><small>&nbsp; @{{hostname}} : {{df[1]}} / {{df[2]}} {{df[3]}}</small></span>
+            Share</b></span><br><small>&nbsp; @{{hostname}} : {{df[1]}} / {{df[2]}} {{df[3]}}</small>
+        </span>
       </span>
-
     </div>
 
     <div class="collapse navbar-collapse pull-right" id="actions">
@@ -137,13 +136,21 @@
             title="Cancel upload">
             <i class="glyphicon glyphicon-ban-circle"></i>
         </button>
-
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
 
 <!-- most of the page content -->
 <div class="container" id="container">
+
+<!-- message flashing -->
+{% if flash %}
+    <ul class=flashes>
+    {% for message in flash %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+{% endif %}
 
 <!-- Drag'n drop indication -->
 <div class="text-center" style="margin: 20px 0 0 0;">
@@ -171,8 +178,8 @@
             </td>
 
             <td><!-- tools -->
-                <button type="submit" value="{{id}}" id="{{id}}" class="btn
-                    btn-danger btn-xs file-options">Move to Trash</button>
+                <button type="button" id="{{id}}" class="btn btn-danger btn-xs
+                    file-options">Delete</button>
             </td>
 
         {% else %} <!-- files -->
@@ -188,7 +195,7 @@
 
             <td><!-- tools -->
                 <button type="button" id="{{id}}" class="btn btn-danger btn-xs
-                    file-options">Move to Trash</button>
+                    file-options">Delete</button>
             </td>
 
         {% endif %}
@@ -199,6 +206,7 @@
         </td>
         <script>
             $('#{{id}}_btn').on('click', function () {$('#{{id}}').toggle()});
+            $('#{{id}}').on('click', function () { $.post('', { trash: "{{filename}}" }); document.location.reload(true); });
         </script>
 
     </tr>

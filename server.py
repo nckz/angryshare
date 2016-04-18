@@ -17,16 +17,40 @@
 import os
 import time
 import socket
+import urllib
+import random
+import string
+import threading
 from flask import Flask, request, redirect, url_for, send_from_directory, abort
 from flask import render_template
 from werkzeug import secure_filename
 
 HOSTNAME = socket.gethostname()
-UPLOAD_FOLDER = './tmp/'
+UPLOAD_FOLDER = os.path.abspath('./tmp/')
 ALLOWED_EXTENSIONS = set(['txt'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.secret_key = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(24)) 
+
+# simple logging buffer
+class LogBuffer():
+    def __init__(self):
+        self._log = []
+
+    def append(self, msg):
+        # append to the list
+        m = (str(msg), threading.Timer(10.0, self._pop))
+        self._log.append(m)
+        m[1].start()
+
+    def _pop(self):
+        self._log.pop(0)
+    
+    def messages(self):
+        return [ m[0] for m in self._log ]
+
+log = LogBuffer()
 
 @app.route('/favicon.ico')
 def faviconico():
@@ -107,8 +131,8 @@ def GetHumanReadable_bytes(size, precision=0):
         size = size / 1024.0
     return "%.*f%s" % (precision, size, suffixes[suffixIndex])
 
-def df():
-    f = os.statvfs('/')
+def df(path='/'):
+    f = os.statvfs(path)
     free_space = f.f_bavail*f.f_frsize
     total_space = f.f_blocks*f.f_frsize
     used_space = (1 - free_space/total_space) * total_space
@@ -120,12 +144,10 @@ def df():
     pf = "%.*f%%" % (0, percentage_full)
 
     return (fs, us, ts, pf)
-    
+
 @app.route('/', defaults={'path': ''}, methods=['GET', 'POST'])
 @app.route("/<path:path>", methods=['GET', 'POST'])
 def index(path):
-
-    print(df())
 
     # Convert requested path to the path relative to the downloads directory.
     # This way the client sees the root as http://<host>/ but the actual
@@ -133,27 +155,49 @@ def index(path):
     upload_path = os.path.join(app.config['UPLOAD_FOLDER'], path)
 
     if request.method == 'POST':
-        print(request)
-        file = request.files['file']
-        print('files POSTed:', file)
-        if file and AllowedFile(file.filename):
+
+        # remove a file or directory
+        if 'trash' in request.form.keys():
+            url = os.path.join(request.url, request.form.get('trash'))
+            rel_path = urllib.parse.urlsplit(url).path
+            local_path = os.path.abspath(UPLOAD_FOLDER + rel_path)
+
+            if os.path.exists(local_path):
+
+                if os.path.isfile(local_path):
+                    try:
+                        os.remove(local_path)
+                    except:
+                        log.append('Failed to remove the file: '+str(url))
+
+                if os.path.isdir(local_path):
+                    try:
+                        os.rmdir(local_path)
+                    except:
+                        log.append('Failed to remove the directory:'
+                            + str(url) +' [make sure its empty first]')
+
+        # upload a file
+        elif request.files['file'] and AllowedFile(file.filename):
+            file = request.files['file']
             filename = secure_filename(file.filename)
             file.save(os.path.join(upload_path, filename))
 
             # if its a post from js, then the js will handle this refresh
             return redirect(os.path.join(url_for('index'),path))
 
-    # if GET
-    if os.path.isdir(upload_path):
-        display_path = os.path.join('/',path)
-        path_nav = LinkDisplayPath(display_path) # path navigation
-        dirlinks = ListAndLinkDir(path, upload_path) # file links
-        return render_template('directory_index.html', pathlist=path_nav, dirlinks=dirlinks, hostname=HOSTNAME, df=df())
-
+    # GET a file
     if os.path.isfile(upload_path):
         dirname = os.path.dirname(upload_path)
         basename = os.path.basename(upload_path)
         return send_from_directory(dirname, basename)
+
+    # GET the main page
+    #if os.path.isdir(upload_path):
+    display_path = os.path.join('/',path)
+    path_nav = LinkDisplayPath(display_path) # path navigation
+    dirlinks = ListAndLinkDir(path, upload_path) # file links
+    return render_template('directory_index.html', pathlist=path_nav, dirlinks=dirlinks, hostname=HOSTNAME, df=df(), flash=log.messages())
 
     # Server Error (the client shouldn't get here)
     abort(500)
