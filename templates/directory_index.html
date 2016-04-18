@@ -164,7 +164,7 @@
 
 <!-- listing and linking the files in each dir-->
 <table class="table table-hover">
-    {% for filename,url,style,date,id in dirlinks %}
+    {% for filename,url,style,date,id,fsize in dirlinks %}
     <tr>
         {% if style %} <!-- directories -->
 
@@ -173,11 +173,14 @@
                     class="list-group-item-dodo" href="{{url}}">{{filename}}</a>
             </td>
 
-            <td><!-- creation date -->
+            <td class="hidden-xs"><!-- directory size -->
+            </td>
+
+            <td class="hidden-xs"><!-- creation date -->
                 <span class="text-right" style="float: right;">{{date}}</span>
             </td>
 
-            <td><!-- tools -->
+            <td class="hidden-xs"><!-- tools -->
                 <button type="button" id="{{id}}" class="btn btn-danger btn-xs
                     file-options">Delete</button>
             </td>
@@ -189,11 +192,15 @@
                     class="list-group-item-dodo" href="{{url}}">{{filename}}</a>
             </td>
 
-            <td><!-- upload date -->
-                <span class="text-right" style="float: right;">{{date}}</span>
+            <td class="hidden-xs"><!-- file size -->
+            <span class="text-right" style="float: right;">{{fsize}}</span>
             </td>
 
-            <td><!-- tools -->
+            <td class="hidden-xs"><!-- upload date -->
+                <span class="text-right hidden-xs" style="float: right;">{{date}}</span>
+            </td>
+
+            <td class="hidden-xs"><!-- tools -->
                 <button type="button" id="{{id}}" class="btn btn-danger btn-xs
                     file-options">Delete</button>
             </td>
@@ -201,7 +208,7 @@
         {% endif %}
 
         <!-- toggle tool buttons -->
-        <td><!-- tools toggle -->
+        <td class="hidden-xs"><!-- tools toggle -->
             <button type="button" id="{{id}}_btn" class="btn btn-default btn-xs" >...</button>
         </td>
         <script>

@@ -6,13 +6,7 @@
 # TODO
 #   * make commandline interface with options for port, uploads dir, app path...
 #   * add file size and date
-#   * add upload drag'n drop
-#   * add new directory, move, and delete options
-#   * project name: AngryShare, ShareNinja, TheGiver, ShareBot, GiveAndTake, 
-#     EasyShare, RapidShare, FileHub, PowerShare, MaximumShare,
-#     HyperTextTransferProtocolShare (HTTPS), Rat'sNest, FileDump, TheDump
-#     Garbage, DumpHub, myGarbage, iDump
-#   * checkout dropzone.js and dragula.js
+#   * add new directory
 
 import os
 import time
@@ -65,6 +59,15 @@ def AllowedFile(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
+def GetHumanReadable_bytes(size, precision=0):
+    # change size in bytes (int) to a string with nice display units
+    suffixes = ['B', 'K', 'M', 'G', 'T']
+    suffixIndex = 0
+    while int(size) > 1024:
+        suffixIndex += 1
+        size = size / 1024.0
+    return "%.*f%s" % (precision, size, suffixes[suffixIndex])
+
 def ListAndLinkDir(rel_path, phys_path):
     # the links need to be relative to the parent path only
     ls = [] # directory listing
@@ -72,6 +75,7 @@ def ListAndLinkDir(rel_path, phys_path):
     style = [] # how should directory links be styled
     upload_date = [] # date the file was created on the server (string)
     ids = [] # valid and unique html id tags
+    file_size = [] # like ls -h
     for l in os.listdir(phys_path):
 
         # full server-side file-system path
@@ -79,6 +83,9 @@ def ListAndLinkDir(rel_path, phys_path):
 
         # creation date
         upload_date.append(time.ctime(os.path.getctime(file_path)))
+
+        # file size
+        file_size.append(GetHumanReadable_bytes(os.path.getsize(file_path)))
 
         # keep the filename
         ls.append(l)
@@ -96,7 +103,7 @@ def ListAndLinkDir(rel_path, phys_path):
         url = os.path.join(os.path.basename(rel_path),l)
         links.append(url)
 
-    return zip(ls, links, style, upload_date, ids)
+    return zip(ls, links, style, upload_date, ids, file_size)
 
 def LinkDisplayPath(path):
     # split the path up into linked buttons
@@ -121,15 +128,6 @@ def LinkDisplayPath(path):
         urls.append(d)
 
     return zip(paths, urls)
-
-def GetHumanReadable_bytes(size, precision=0):
-    # change size in bytes (int) to a string with nice display units
-    suffixes = ['B', 'K', 'M', 'G', 'T']
-    suffixIndex = 0
-    while int(size) > 1024:
-        suffixIndex += 1
-        size = size / 1024.0
-    return "%.*f%s" % (precision, size, suffixes[suffixIndex])
 
 def df(path='/'):
     f = os.statvfs(path)
