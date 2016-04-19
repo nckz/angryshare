@@ -32,6 +32,14 @@
       color: #ff8000;
     }
 
+    #droparea {
+        font-size: 12px;
+    }
+
+    #dropicon {
+        font-size: 60px;
+    }
+
     #pathurl {
         color: #ff4000; 
     }
@@ -172,12 +180,6 @@
     </ul>
 {% endif %}
 
-            
-<!-- Drag'n drop indication -->
-<div class="text-center" style="margin: 20px 0 0 0;">
-    Add files by dropping them here.
-</div>
-
 <!-- directory path navigation -->
 <h2>
 {% for path,url in pathlist %}<a id="pathurl" href="{{url}}">{{path}}</a>{% endfor %}
@@ -296,6 +298,13 @@
       </div>
 
     </div>
+
+<!-- Drag'n drop indication -->
+<div class="hidden-xs text-center">
+    <span class="text-center"><i class="glyphicon glyphicon-download" id="dropicon"></i></span>
+    <br>
+    <span class="text-center" id="droparea">Add files by dragging and dropping them on this page.</span>
+</div>
 
 </div> <!-- container -->
 
