@@ -192,7 +192,7 @@ def index(path):
                     log.append('Failed to add path at: '+str(url))
 
         # upload a file
-        elif request.files['file'] and AllowedFile(file.filename):
+        elif request.files['file'] and AllowedFile(request.files['file'].filename):
             file = request.files['file']
             filename = secure_filename(file.filename)
             file.save(os.path.join(upload_path, filename))
