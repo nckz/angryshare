@@ -15,6 +15,7 @@ import urllib
 import random
 import string
 import threading
+import hashlib
 from flask import Flask, request, redirect, url_for, send_from_directory, abort
 from flask import render_template
 from werkzeug import secure_filename
@@ -91,7 +92,7 @@ def ListAndLinkDir(rel_path, phys_path):
         ls.append(l)
 
         # id tags
-        ids.append(l.replace('.','-'))
+        ids.append(hashlib.md5(str(l).encode('utf8')).hexdigest())
 
         # make directories stand out
         if os.path.isdir(file_path):
