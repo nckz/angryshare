@@ -57,6 +57,10 @@
         display: none;
     }
 
+    .new-folder {
+        display: none;
+    }
+
     /* Mimic table appearance */
     div.table {
       display: table;
@@ -121,6 +125,11 @@
     </div>
 
     <div class="collapse navbar-collapse pull-right" id="actions">
+        <span data-toggle="tooltip" title="New Directory" data-placement="bottom">
+        <button type="button" class="btn btn-default new-folder-btn navbar-btn">
+            <i class="glyphicon glyphicon-folder-open"></i>
+        </button>
+        </span>
         <button type="button" class="btn btn-default navbar-btn
             fileinput-button" data-toggle="tooltip" data-placement="bottom"
             title="Add files...">
@@ -151,6 +160,12 @@
     {% endfor %}
     </ul>
 {% endif %}
+
+            
+<div class="new-folder">
+A form for the new folder.
+
+</div>
 
 <!-- Drag'n drop indication -->
 <div class="text-center" style="margin: 20px 0 0 0;">
@@ -329,6 +344,11 @@
       document.querySelector("#actions .cancel").onclick = function() {
         myDropzone.removeAllFiles(true);
       };
+
+      // Add a new folder
+      $('#actions .new-folder-btn').on('click', function () { 
+        $('.new-folder').toggle();
+        });
     </script>
 
 
