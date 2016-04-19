@@ -5,8 +5,6 @@
 
 # TODO
 #   * make commandline interface with options for port, uploads dir, app path...
-#   * add file size and date
-#   * add new directory
 
 import os
 import time
