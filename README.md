@@ -18,6 +18,7 @@ data sets with minimal impact on these other systems.
 * Path-Based Directory Navigation
 * Obvious File URLs that Mirror the Navigation
 * All Functionality on a Single Page
+* Responsive
 
 ## Built On
 
