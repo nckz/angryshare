@@ -167,14 +167,29 @@ def index(path):
                     try:
                         os.remove(local_path)
                     except:
-                        log.append('Failed to remove the file: '+str(url))
+                        log.append('Failed to remove the file at: '+str(url))
 
                 if os.path.isdir(local_path):
                     try:
                         os.rmdir(local_path)
                     except:
-                        log.append('Failed to remove the directory:'
+                        log.append('Failed to remove the directory at: '
                             + str(url) +' [make sure its empty first]')
+
+        # make a directory
+        elif 'dirname' in request.form.keys():
+            url = os.path.join(request.url, request.form.get('dirname'))
+            rel_path = urllib.parse.urlsplit(url).path
+            local_path = os.path.abspath(UPLOAD_FOLDER + rel_path)
+
+            if os.path.exists(local_path):
+                log.append('Failed to add path at: '+str(url)+' [already exists]')
+
+            else:
+                try:
+                    os.mkdir(local_path)
+                except:
+                    log.append('Failed to add path at: '+str(url))
 
         # upload a file
         elif request.files['file'] and AllowedFile(file.filename):
@@ -198,7 +213,7 @@ def index(path):
     dirlinks = ListAndLinkDir(path, upload_path) # file links
     return render_template('directory_index.html', pathlist=path_nav, dirlinks=dirlinks, hostname=HOSTNAME, df=df(), flash=log.messages())
 
-    # Server Error (the client shouldn't get here)
+    # Server Error (the client can't get here)
     abort(500)
 
 if __name__ == "__main__":
